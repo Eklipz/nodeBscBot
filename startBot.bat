@@ -1,1 +1,1 @@
-node nodebot.js
+node nodebot.js 2> error.log
