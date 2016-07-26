@@ -7,7 +7,7 @@ var bot = new PlugAPI({"email": config.email, "password": config.password});// I
 ***************************************************************************/
 
 var botName = "NodeBot";
-var botVersion = "1.61";
+var botVersion = "1.62";
 var VoteSkip = 0;
 var Skippers = "";
 var currentDj = null;
@@ -69,6 +69,9 @@ bot.on('userLeave', function(usr) {
         VoteSkip--;
     }
     console.re.log(usr+" left.");
+});
+bot.on('userJoin', function(usr) {
+    console.re.log(usr+" joined.");
 });
 bot.on('modBan', function(ban) {
     switch(ban.duration) {
@@ -260,7 +263,7 @@ function command(cmd,args,un,uid,cid, rank) {
             userCommand = false;
             setTimeout(function(){ userCommand = true; }, cmdCooldown * 1000);
         }
-        //////////////////// STREAM \\\\\\\\\\\\\\\\\\\\
+        //////////////////// STEAM \\\\\\\\\\\\\\\\\\\\
         else if (cmd.toLowerCase() === "steam" && cmdCooldown === 0) {
             bot.sendChat(chatPrefix+"Use Steam at all? Come join our Steam community: http://steamcommunity.com/groups/plugdjitsaTRAPandEDM");
             userCommand = false;
@@ -425,6 +428,64 @@ function command(cmd,args,un,uid,cid, rank) {
             if(crashOnRestart === true) {
                 throw "Triggering restart";
             }
+        }
+        //////////////////// ROCK PAPER SCISSORS
+        else if(cmd.toLowerCase() === "rps" && cmdCooldown === 0) {
+            if(!args[0]){
+                bot.sendChat(chatPrefix+"[Guide: https://git.io/vKfj8 ] To play Rock Paper Scissors Lizard Spock, use !rps {Choice}");
+            } else {
+                var choices = ["rock", "paper", "scissors", "lizard", "spock"];
+                var botChoice = choices[Math.floor(Math.random()*choices.length)];
+                var userChoice = args[0];
+                if(botChoice == userChoice){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"! It's a draw!");
+                } else if(botChoice == choices[0] && userChoice == choices[1]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[0] && userChoice == choices[2]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[0] && userChoice == choices[3]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[0] && userChoice == choices[4]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[1] && userChoice == choices[0]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[1] && userChoice == choices[2]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[1] && userChoice == choices[3]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[1] && userChoice == choices[4]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[2] && userChoice == choices[0]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[2] && userChoice == choices[1]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[2] && userChoice == choices[3]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[2] && userChoice == choices[4]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[3] && userChoice == choices[0]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[3] && userChoice == choices[1]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[3] && userChoice == choices[2]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[3] && userChoice == choices[4]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[4] && userChoice == choices[0]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[4] && userChoice == choices[1]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[4] && userChoice == choices[2]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else if(botChoice == choices[4] && userChoice == choices[3]){
+                    bot.sendChat(chatPrefix+"chose "+botChoice+"!");
+                } else {
+                    bot.sendChat(chatPrefix+"Please select between Rock, Paper, Scissors, Lizard, or Spock.");
+                }
+            }
+            
+            userCommand = false;
+            setTimeout(function(){ userCommand = true; }, cmdCooldown * 1000);
         }
         //////////////////// SKIP
         else if(cmd.toLowerCase() === "skip" && currentDj !== null) {
