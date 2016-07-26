@@ -7,7 +7,7 @@ var bot = new PlugAPI({"email": config.email, "password": config.password});// I
 ***************************************************************************/
 
 var botName = "NodeBot";
-var botVersion = "1.62";
+var botVersion = "1.65";
 var VoteSkip = 0;
 var Skippers = "";
 var currentDj = null;
@@ -17,6 +17,8 @@ var userCommand = true;
 var crashOnRestart = false;
 var chatPrefix = "/me ";
 var autoWoot = true;
+var gamesEnable = true; // I'll expand on this more later
+var consoleReLog = true; // Enable to have online console viewer. http://console.re/
 
 // Auto Messages
 var autoDisable = false;
@@ -26,7 +28,7 @@ var autoRoulette = false;
 var autoRules = false;
 
 bot.multiline = true;
-var consolere = require('console-remote-client').connect('console.re','80','nodePlugBot');
+var consolere = require('console-remote-client').connect('console.re',config.consolePort,config.consoleExt);
 
 bot.connect(config.room);
 
@@ -46,16 +48,22 @@ bot.on('roomJoin', function(room) {
 });
 bot.on('close', function(){
     bot.connect(config.room);
-    console.re.log("Connection Closed.");
+    if(consoleReLog){
+        console.re.log("Connection Closed.");
+    }
 });
 bot.on('error', function(){
     bot.connect(config.room);
-    console.re.log("An Error Occured!");
+    if(consoleReLog){
+        console.re.log("An Error Occured!");
+    }
 });
 bot.on('chat', function (msg) {
     if(msg.command !== undefined) {
         command(msg.command, msg.args, msg.from.username, msg.from.id, msg.id, msg.from.role);
-        console.re.log("Command Issued: "+msg.from.username+" used "+msg.command);
+        if(consoleReLog){
+            console.re.log("Command Issued: "+msg.from.username+" used "+msg.command);
+        }
     }
 });
 bot.on('advance', function(dj) {
@@ -68,11 +76,17 @@ bot.on('userLeave', function(usr) {
         Skippers.replace(" "+usr.id, "");
         VoteSkip--;
     }
-    console.re.log(usr+" left.");
+    if(consoleReLog){
+        console.re.log(usr+" left.");
+    }
 });
+/*This doesn't work. Not sure why... v_v
 bot.on('userJoin', function(usr) {
-    console.re.log(usr+" joined.");
+    if(consoleReLog){
+        console.re.log(usr+" joined."); 
+    }
 });
+*/
 bot.on('modBan', function(ban) {
     switch(ban.duration) {
         case 60:
@@ -101,7 +115,9 @@ bot.on('modBan', function(ban) {
             strReason = "Spam/Troll";
     }
     bot.sendChat(ban.username+" has been banned "+strTime+" because of "+strReason+".");
-    console.re.log(ban.username+" has been banned "+strTime+" because of "+strReason+".");
+    if(consoleReLog){
+        console.re.log(ban.username+" has been banned "+strTime+" because of "+strReason+".");
+    }
 });
 
 
@@ -118,6 +134,11 @@ function command(cmd,args,un,uid,cid, rank) {
     /*###################################
     ######## Informative Commands #######
     ###################################*/
+
+                                                                                    /* I DEFININTELY WANT TO MOVE
+                                                                                    MOST OF THIS TEXT TO AN EXTERNAL
+                                                                                    FILE FOR EASIER EDITING AND
+                                                                                    LESS CLUTTER. TODO */
 
         //////////////////// ABUSE \\\\\\\\\\\\\\\\\\\\
         if (cmd.toLowerCase() === "abuse" && userCommand === true) {
@@ -429,7 +450,7 @@ function command(cmd,args,un,uid,cid, rank) {
                 throw "Triggering restart";
             }
         }
-        //////////////////// ROCK PAPER SCISSORS
+        //////////////////// ROCK PAPER SCISSORS *Going to try and minimize this when I figure out how. D:
         else if(cmd.toLowerCase() === "rps" && cmdCooldown === 0) {
             if(!args[0]){
                 bot.sendChat(chatPrefix+"[Guide: https://git.io/vKfj8 ] To play Rock Paper Scissors Lizard Spock, use !rps {Choice}");

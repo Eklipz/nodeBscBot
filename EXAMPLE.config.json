@@ -1,5 +1,11 @@
 {
     "email": "Enter Email",
     "password": "Enter Password",
-    "room": "Room Name" // Room name here (https://plug.dj/crazy-kiwix will be crazy-kiwix)
+    "room": "Room Name", // Room name here (https://plug.dj/crazy-kiwix will be crazy-kiwix)
+    // CONSOLE RE SETTINGS
+    // You can ignore this if you have it disabled.
+    // Go to http://console.re/ and create a channel. The click "How to connect?", select Node JS Module, and it will give you the Port/Extension in the second code bit.
+    // connect('console.re','CONSOLEPORT','CONSOLEEXT');
+    "consolePort": "", 
+    "consoleExt": ""
 }
