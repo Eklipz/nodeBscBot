@@ -1,5 +1,5 @@
 {
-    "email": "",
-    "password": "",
-    "room": ""
+    "email": "Enter Email",
+    "password": "Enter Password",
+    "room": "Room Name" // Room name here (https://plug.dj/crazy-kiwix will be crazy-kiwix)
 }
