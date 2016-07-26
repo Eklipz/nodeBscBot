@@ -8,7 +8,7 @@ A [Plug.dj](https://plug.dj/) bot which allow you to do multiple moderations act
 ### Using Github:
 * The bot needs [Node.js](http://nodejs.org/) to work.
 * The bot uses [PlugAPI](https://github.com/plugCubed/plugAPI) so you'll need it before running the bot.
-* After that, you need to download the bot. The entire bot is in the nodebot.js
+* After that, you need to download the bot repository. nodebot.js and config.json are necessary. 
 * Now, open the EXAMPLEconfig.json file and add the name of your room (only the name __without the /__ ), the email of the bot account and it password.
 * Rename EXAMPLEconfig.json to config.json and save. You can use *node nodebot.js* or the included .bat file to start the bot.
 * The bot should now be connected to your room and will detect commands starting by __!__
