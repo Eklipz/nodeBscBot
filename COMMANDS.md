@@ -11,6 +11,7 @@
 * __!commands__: Show a link to this readme.
 * __!link__: Send the link of the current song in the chat (___Current DJ or Resident DJ to Host___).
 * __!restart__: Restart the bot (Don't work if the bot crashed). (___Manager to Host___).
+* __!rps__: Play Rock Paper Scissors with the bot.
 * __!skip__: Forceskip the song if your rank is highest than Resident DJ or if you're DJ (___Current DJ or Bouncer to Host___). If you're not, it start a vote to skip (___None to Resident DJ___).
 * __!unban__ (username): Unban an user. (___Manager to Host___).
 
