@@ -7,7 +7,7 @@ var bot = new PlugAPI({"email": config.email, "password": config.password});// I
 ***************************************************************************/
 
 var botName = "NodeBot";
-var botVersion = "1.65";
+var botVersion = "1.66";
 var VoteSkip = 0;
 var Skippers = "";
 var currentDj = null;
@@ -19,6 +19,8 @@ var chatPrefix = "/me ";
 var autoWoot = true;
 var gamesEnable = true; // I'll expand on this more later
 var consoleReLog = true; // Enable to have online console viewer. http://console.re/
+var launchTime = null;
+var maximumAfk = 120;
 
 // Auto Messages
 var autoDisable = false;
@@ -36,6 +38,9 @@ bot.connect(config.room);
 bot.on('roomJoin', function(room) {
     console.re.log("Succefully joined "+config.room);
     bot.sendChat(botName+" v"+botVersion+" loaded.");
+    if (launchTime === null) {
+        launchTime = Date.now();
+    }
 
     setInterval(function () { if(autoDisable === true) { bot.sendChat("!afkdisable"); }}, 1000 * 60 * 60);
     setInterval(function () { if(autoDisable === true) { bot.sendChat("!joindisable"); }}, 1000 * 60 * 61);
@@ -58,6 +63,7 @@ bot.on('error', function(){
         console.re.log("An Error Occured!");
     }
 });
+
 bot.on('chat', function (msg) {
     if(msg.command !== undefined) {
         command(msg.command, msg.args, msg.from.username, msg.from.id, msg.id, msg.from.role);
@@ -80,6 +86,7 @@ bot.on('userLeave', function(usr) {
         console.re.log(usr+" left.");
     }
 });
+
 /*This doesn't work. Not sure why... v_v
 bot.on('userJoin', function(usr) {
     if(consoleReLog){
@@ -119,6 +126,24 @@ bot.on('modBan', function(ban) {
         console.re.log(ban.username+" has been banned "+strTime+" because of "+strReason+".");
     }
 });
+
+bot.on("advance", function(data) {
+    if (data.media !== null) {
+        bot.getHistory(function(history) {
+            for (var i in history) {
+                if (history.hasOwnProperty(i)) {
+                    if (history[i].id == data.media.id) {
+                        var skippedDJ = bot.getDJ();
+                        bot.moderateForceSkip();
+                        bot.sendChat("/me Song skipped because it was in history!");
+                        if(consoleReLog){
+                            console.re.log(skippedDJ+" tried to play a recent song.");
+                        }
+                    }
+                }
+            }
+        });
+    }
 
 
 /***************************************************************************
@@ -325,10 +350,27 @@ function command(cmd,args,un,uid,cid, rank) {
     ######### Functional Commands #######
     ###################################*/
 
+
         //////////////////// ADD
         else if (cmd.toLowerCase() === "add" && rank>2) {
             if(typeof args[0] === "string" && checkForUser(args[0])) {
                 bot.moderateAddDJ(getUser(args[0]).id);
+            }
+        }
+        //////////////////// AFKLIMIT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TEST
+        else if (cmd.toLowerCase() === "afklimit" && rank>3) {
+            if(typeof args[0] === "string" && checkForUser(args[0])) {
+                var msg = chat.message;
+                if (!args) {
+                    bot.sendChat(chatPrefix+"Invalid time supplied.");
+                }
+                if (!isNaN(args[0])) {
+                    maximumAfk = parseInt(limit, 10);
+                    bot.sendChat(chatPrefix+"Maximum afk duration set to "+maximumAfk+" minutes.");
+                }
+                else {
+                    bot.sendChat(chatPrefix+"Invalid time supplied.");
+                }
             }
         }
         //////////////////// AUTO DISABLE
