@@ -7,7 +7,7 @@ var bot = new PlugAPI({"email": config.email, "password": config.password});// I
 ***************************************************************************/
 
 var botName = "NodeBot";
-var botVersion = "1.66";
+var botVersion = "1.68";
 var VoteSkip = 0;
 var Skippers = "";
 var currentDj = null;
@@ -34,7 +34,7 @@ var consolere = require('console-remote-client').connect('console.re',config.con
 
 bot.connect(config.room);
 
-/* === Events Handling === */
+/* === Event Handling === */
 bot.on('roomJoin', function(room) {
     console.re.log("Succefully joined "+config.room);
     bot.sendChat(botName+" v"+botVersion+" loaded.");
@@ -76,6 +76,23 @@ bot.on('advance', function(dj) {
     VoteSkip = 0;
     Skippers = "";
     if(autoWoot === true) {bot.woot();}
+
+    if (data.media !== null) {
+        bot.getHistory(function(history) {
+            for (var i in history) {
+                if (history.hasOwnProperty(i)) {
+                    if (history[i].id == data.media.id) {
+                        var skippedDJ = bot.getDJ();
+                        bot.moderateForceSkip();
+                        bot.sendChat("/me Song skipped because it was in history!");
+                        if(consoleReLog){
+                            console.re.log(skippedDJ+" tried to play a recent song.");
+                        }
+                    }
+                }
+            }
+        });
+    }
 });
 bot.on('userLeave', function(usr) {
     if(Skippers.indexOf(usr.id) != -1) {
@@ -86,14 +103,11 @@ bot.on('userLeave', function(usr) {
         console.re.log(usr+" left.");
     }
 });
-
-/*This doesn't work. Not sure why... v_v
-bot.on('userJoin', function(usr) {
+bot.on('userJoin', function(data) {
     if(consoleReLog){
-        console.re.log(usr+" joined."); 
+        console.re.log(data.user.username+" joined."); 
     }
 });
-*/
 bot.on('modBan', function(ban) {
     switch(ban.duration) {
         case 60:
@@ -127,23 +141,6 @@ bot.on('modBan', function(ban) {
     }
 });
 
-bot.on("advance", function(data) {
-    if (data.media !== null) {
-        bot.getHistory(function(history) {
-            for (var i in history) {
-                if (history.hasOwnProperty(i)) {
-                    if (history[i].id == data.media.id) {
-                        var skippedDJ = bot.getDJ();
-                        bot.moderateForceSkip();
-                        bot.sendChat("/me Song skipped because it was in history!");
-                        if(consoleReLog){
-                            console.re.log(skippedDJ+" tried to play a recent song.");
-                        }
-                    }
-                }
-            }
-        });
-    }
 
 
 /***************************************************************************
